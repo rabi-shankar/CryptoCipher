@@ -95,7 +95,7 @@
         function encrypt(data, encryption_key) {
 
             if (encryption_key.length !== 16 && encryption_key.length !== 32) {
-                return "AES key data must be 128 or 256 bits";
+                throw new Error("AES key data must be 128 or 256 bits");
             }
 
             var ciphering = "AES-CTR";

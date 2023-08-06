@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Text Encryption and Decryption</title>
     <!-- Include Bootstrap CSS -->
@@ -7,134 +8,135 @@
     <!-- Include Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
 <body>
 
-<div class="container mt-5">
-    <h2 class="mb-4">Text Encryption and Decryption</h2>
-    <div class="form-group">
-        <label for="encryptionKey">Encryption Key:</label>
-        <input type="text" class="form-control" id="encryptionKey">
-    </div>
-    <div class="form-group">
-        <label for="operation">Select Operation:</label>
-        <select class="form-control" id="operation">
-            <option value="encrypt">Encrypt</option>
-            <option value="decrypt">Decrypt</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="message">Message:</label>
-        <textarea class="form-control" rows="4" id="message"></textarea>
-    </div>
-    <button type="button" class="btn btn-primary" onclick="performOperation()">Perform Operation</button>
-    <div class="mt-4">
-        <strong>Result:</strong>
-        <div class="d-flex align-items-center border p-2">
-            <div id="result" class="flex-grow-1"></div>
-            <button type="button" class="btn btn-link" id="copyButton" onclick="copyToClipboard()">
-                <i class="fas fa-copy"></i>
-            </button>
+    <div class="container mt-5">
+        <h2 class="mb-4">Text Encryption and Decryption</h2>
+        <div class="form-group">
+            <label for="encryptionKey">Encryption Key:</label>
+            <input type="text" class="form-control" id="encryptionKey">
+        </div>
+        <div class="form-group">
+            <label for="operation">Select Operation:</label>
+            <select class="form-control" id="operation">
+                <option value="encrypt">Encrypt</option>
+                <option value="decrypt">Decrypt</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="message">Message:</label>
+            <textarea class="form-control" rows="4" id="message"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="performOperation()">Perform Operation</button>
+        <div class="mt-4">
+            <strong>Result:</strong>
+            <div class="d-flex align-items-center border p-2">
+                <div id="result" class="flex-grow-1"></div>
+                <button type="button" class="btn btn-link" id="copyButton" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap Toast -->
-<div class="toast" id="copyToast" style="position: absolute; top: 20px; right: 20px;">
-    <div class="toast-header">
-        <strong class="mr-auto">Copied</strong>
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+    <!-- Bootstrap Toast -->
+    <div class="toast" id="copyToast" style="position: absolute; top: 20px; right: 20px;">
+        <div class="toast-header">
+            <strong class="mr-auto">Copied</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+        </div>
+        <div class="toast-body">
+            Text copied to clipboard!
+        </div>
     </div>
-    <div class="toast-body">
-        Text copied to clipboard!
-    </div>
-</div>
 
-<script>
-    const ciphering = "AES-CTR";
-    const encryption_iv = '1234567891011121';
-    
-    function performOperation() {
-        var operation = document.getElementById("operation").value;
-        var encryptionKey = document.getElementById("encryptionKey").value;
-        var message = document.getElementById("message").value;
+    <script>
+        const ciphering = "AES-CTR";
+        const encryption_iv = '1234567891011121';
 
-        if (operation === "encrypt") {
-            encrypt(encryptionKey, message)
-                .then(encrypted => {
-                        document.getElementById("result").innerText = "Encrypted: " + encryptedMessage;
-                })
-                .catch(error => {
-                        document.getElementById("result").innerText = "Encryption Error: "+ error;
-            });
-            
-        } else if (operation === "decrypt") {
-            var decryptedMessage = decrypt(encryptionKey, message);
-            document.getElementById("result").innerText = "Decrypted: " + decryptedMessage;
+        function performOperation() {
+            var operation = document.getElementById("operation").value;
+            var encryptionKey = document.getElementById("encryptionKey").value;
+            var message = document.getElementById("message").value;
+
+            if (operation === "encrypt") {
+                encryption(message, encryptionKey).then(function (encrypted) {
+                    console.log("Encrypted:", encrypted);
+                    document.getElementById("result").innerText = "Encrypted: " + encryptedMessage;
+
+                }).catch(function (error) {
+                    console.error("Encryption Error:", error);
+                    document.getElementById("result").innerText = "Encryption Error: " + error;
+                });
+
+            } else if (operation === "decrypt") {
+                var decryptedMessage = decrypt(encryptionKey, message);
+                document.getElementById("result").innerText = "Decrypted: " + decryptedMessage;
+            }
         }
-    }
 
-    function copyToClipboard() {
-        var resultText = document.getElementById("result").innerText;
-        var tempInput = document.createElement("input");
-        document.body.appendChild(tempInput);
-        tempInput.value = resultText;
-        tempInput.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempInput);
+        function copyToClipboard() {
+            var resultText = document.getElementById("result").innerText;
+            var tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = resultText;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
 
-        // Show toast
-        var toast = document.getElementById("copyToast");
-        var bsToast = new bootstrap.Toast(toast);
-        bsToast.show();
-    }
+            // Show toast
+            var toast = document.getElementById("copyToast");
+            var bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+        }
 
-    
-    function encrypt(data, encryption_key) {
-        const options = 0;
-        const encryption_IV = new TextEncoder().encode(encryption_iv);
-        const encoder = new TextEncoder();
 
-        async function encryptData() {
-            const subtleCrypto = window.crypto.subtle;
-            const keyBytes = await subtleCrypto.importKey(
-                'raw',
-                encoder.encode(encryption_key),
+        function encrypt(data, encryption_key) {
+
+            var ciphering = "AES-CTR";
+            var options = { name: ciphering, counter: new Uint8Array(16), length: 128 };
+
+            var keyBuffer = new TextEncoder().encode(encryption_key);
+            var dataBuffer = new TextEncoder().encode(data);
+
+            var importedKey = window.crypto.subtle.importKey(
+                "raw",
+                keyBuffer,
                 ciphering,
                 false,
-                ['encrypt']
+                ["encrypt"]
             );
 
-        const encrypted_data = await subtleCrypto.encrypt(
-            {
-                name: ciphering,
-                counter: encryption_IV,
-                length: 128
-            },
-            keyBytes,
-            encoder.encode(data)
-        );
+            return importedKey.then(function (key) {
+                return window.crypto.subtle.encrypt(
+                    options,
+                    key,
+                    dataBuffer
+                );
+            }).then(function (encryptedData) {
+                var encryptedBytes = new Uint8Array(encryptedData);
+                var encoded_encryption = btoa(Array.from(encryptedBytes, function (byte) {
+                    return String.fromCharCode(byte);
+                }).join(''));
+                return encoded_encryption;
+            });
+        }
 
-        const encryptedBytes = new Uint8Array(encrypted_data);
-        const encoded_encryption = btoa(String.fromCharCode(...encryptedBytes));
-        return encoded_encryption;
-    }
 
-    return encryptData();
-}
 
-    
+        function decrypt(key, message) {
+            // Implement your decryption logic here
+            // Use 'key' and 'message' parameters
+            return "Decrypted Text";
+        }
+    </script>
 
-    function decrypt(key, message) {
-        // Implement your decryption logic here
-        // Use 'key' and 'message' parameters
-        return "Decrypted Text";
-    }
-</script>
-
-<!-- Include Bootstrap JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
+
 </html>

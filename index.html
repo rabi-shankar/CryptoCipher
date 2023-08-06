@@ -32,7 +32,7 @@
         <div class="mt-4">
             <strong>Result:</strong>
             <div class="d-flex align-items-center border p-2">
-                <div id="result"class="text-nowrap" ></div>
+                <div class="flex-grow-1 text-wrap"><p id="result" ></p></div>
                 <button type="button" class="btn btn-link" id="copyButton" onclick="copyToClipboard()">
                     <i class="fas fa-copy"></i>
                 </button>
@@ -95,7 +95,7 @@
         function encrypt(data, encryption_key) {
 
             if (encryption_key.length !== 16 && encryption_key.length !== 32) {
-                throw new Error("AES key data must be 128 or 256 bits");
+                return "AES key data must be 128 or 256 bits";
             }
 
             var ciphering = "AES-CTR";

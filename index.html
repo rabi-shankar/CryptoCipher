@@ -50,14 +50,23 @@
 </div>
 
 <script>
+    const ciphering = "AES-CTR";
+    const encryption_iv = '1234567891011121';
+    
     function performOperation() {
         var operation = document.getElementById("operation").value;
         var encryptionKey = document.getElementById("encryptionKey").value;
         var message = document.getElementById("message").value;
 
         if (operation === "encrypt") {
-            var encryptedMessage = encrypt(encryptionKey, message);
-            document.getElementById("result").innerText = "Encrypted: " + encryptedMessage;
+            encrypt(encryptionKey, message)
+                .then(encrypted => {
+                        document.getElementById("result").innerText = "Encrypted: " + encryptedMessage;
+                })
+                .catch(error => {
+                        document.getElementById("result").innerText = "Encryption Error: "+ error;
+            });
+            
         } else if (operation === "decrypt") {
             var decryptedMessage = decrypt(encryptionKey, message);
             document.getElementById("result").innerText = "Decrypted: " + decryptedMessage;
@@ -80,10 +89,43 @@
     }
 
     function encrypt(key, message) {
-        // Implement your encryption logic here
-        // Use 'key' and 'message' parameters
+        
         return "Encrypted Text";
     }
+    function encryption(data, encryption_key) {
+        const options = 0;
+        const encryption_IV = new TextEncoder().encode(encryption_iv);
+        const encoder = new TextEncoder();
+
+        async function encryptData() {
+            const subtleCrypto = window.crypto.subtle;
+            const keyBytes = await subtleCrypto.importKey(
+                'raw',
+                encoder.encode(encryption_key),
+                ciphering,
+                false,
+                ['encrypt']
+            );
+
+        const encrypted_data = await subtleCrypto.encrypt(
+            {
+                name: ciphering,
+                counter: encryption_IV,
+                length: 128
+            },
+            keyBytes,
+            encoder.encode(data)
+        );
+
+        const encryptedBytes = new Uint8Array(encrypted_data);
+        const encoded_encryption = btoa(String.fromCharCode(...encryptedBytes));
+        return encoded_encryption;
+    }
+
+    return encryptData();
+}
+
+    
 
     function decrypt(key, message) {
         // Implement your decryption logic here

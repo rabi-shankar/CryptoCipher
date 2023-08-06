@@ -61,7 +61,7 @@
             var message = document.getElementById("message").value;
 
             if (operation === "encrypt") {
-                encryption(message, encryptionKey).then(function (encrypted) {
+                encrypt(message, encryptionKey).then(function (encrypted) {
                     console.log("Encrypted:", encrypted);
                     document.getElementById("result").innerText = "Encrypted: " + encryptedMessage;
 

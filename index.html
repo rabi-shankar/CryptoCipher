@@ -94,42 +94,47 @@
 
         function encrypt(data, encryption_key) {
 
-            var ciphering = "AES-CTR";
-            var options = { name: ciphering, counter: new Uint8Array(16), length: 128 };
+            (data, encryption_key) {
+                if (encryption_key.length !== 16 && encryption_key.length !== 32) {
+                    throw new Error("AES key data must be 128 or 256 bits");
+                }
 
-            var keyBuffer = new TextEncoder().encode(encryption_key);
-            var dataBuffer = new TextEncoder().encode(data);
+                var ciphering = "AES-CTR";
+                var options = { name: ciphering, counter: new Uint8Array(16), length: 128 };
 
-            var importedKey = window.crypto.subtle.importKey(
-                "raw",
-                keyBuffer,
-                ciphering,
-                false,
-                ["encrypt"]
-            );
+                var keyBuffer = new TextEncoder().encode(encryption_key);
+                var dataBuffer = new TextEncoder().encode(data);
 
-            return importedKey.then(function (key) {
-                return window.crypto.subtle.encrypt(
-                    options,
-                    key,
-                    dataBuffer
+                var importedKey = window.crypto.subtle.importKey(
+                    "raw",
+                    keyBuffer,
+                    ciphering,
+                    false,
+                    ["encrypt"]
                 );
-            }).then(function (encryptedData) {
-                var encryptedBytes = new Uint8Array(encryptedData);
-                var encoded_encryption = btoa(Array.from(encryptedBytes, function (byte) {
-                    return String.fromCharCode(byte);
-                }).join(''));
-                return encoded_encryption;
-            });
-        }
+
+                return importedKey.then(function (key) {
+                    return window.crypto.subtle.encrypt(
+                        options,
+                        key,
+                        dataBuffer
+                    );
+                }).then(function (encryptedData) {
+                    var encryptedBytes = new Uint8Array(encryptedData);
+                    var encoded_encryption = btoa(Array.from(encryptedBytes, function (byte) {
+                        return String.fromCharCode(byte);
+                    }).join(''));
+                    return encoded_encryption;
+                });
+            }
 
 
 
-        function decrypt(key, message) {
-            // Implement your decryption logic here
-            // Use 'key' and 'message' parameters
-            return "Decrypted Text";
-        }
+            function decrypt(key, message) {
+                // Implement your decryption logic here
+                // Use 'key' and 'message' parameters
+                return "Decrypted Text";
+            }
     </script>
 
     <!-- Include Bootstrap JS -->

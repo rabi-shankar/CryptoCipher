@@ -63,7 +63,7 @@
             if (operation === "encrypt") {
                 encrypt(message, encryptionKey).then(function (encrypted) {
                     console.log("Encrypted:", encrypted);
-                    document.getElementById("result").innerText = "Encrypted: " + encryptedMessage;
+                    document.getElementById("result").innerText = "Encrypted: " + encrypted;
 
                 }).catch(function (error) {
                     console.error("Encryption Error:", error);
@@ -71,8 +71,8 @@
                 });
 
             } else if (operation === "decrypt") {
-                var decryptedMessage = decrypt(encryptionKey, message);
-                document.getElementById("result").innerText = "Decrypted: " + decryptedMessage;
+                var decrypted = decrypt(encryptionKey, message);
+                document.getElementById("result").innerText = "Decrypted: " + decrypted;
             }
         }
 

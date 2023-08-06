@@ -20,10 +20,9 @@ Data Privacy Empowerment: By offering a reliable and secure encryption and decry
 
 ## How to use:
 
-Clone the repository to your local machine.
-
-Follow the provided documentation to set up the app locally or deploy it to a web server.
-
-Customize the app's appearance and behavior as needed.
-
-Share encrypted messages with recipients, allowing them to use CryptoCipher for decryption.
+1. Enter your encryption key in the provided input box.
+2.Choose between encryption or decryption from the dropdown menu.
+3. Enter your message in the text box.
+4. Click the "Encrypt" or "Decrypt" button to perform the respective operation.
+5. Use the copy-to-clipboard icon to easily copy the encrypted or decrypted result.
+6. Enjoy the peace of mind that comes with knowing your sensitive messages are secure.

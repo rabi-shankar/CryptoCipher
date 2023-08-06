@@ -21,6 +21,9 @@ Data Privacy Empowerment: By offering a reliable and secure encryption and decry
 ## How to use:
 
 Clone the repository to your local machine.
+
 Follow the provided documentation to set up the app locally or deploy it to a web server.
+
 Customize the app's appearance and behavior as needed.
+
 Share encrypted messages with recipients, allowing them to use CryptoCipher for decryption.

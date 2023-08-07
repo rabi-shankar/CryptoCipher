@@ -71,8 +71,14 @@
                 });
 
             } else if (operation === "decrypt") {
-                var decrypted = decrypt(encryptionKey, message);
-                document.getElementById("result").innerText = "Decrypted: " + decrypted;
+                decrypt(message, encryptionKey).then(function (decrypted) {
+                    console.log("Decrypted:", decrypted);
+                    document.getElementById("result").innerText = "Decrypted: " + decrypted;
+
+                }).catch(function (error) {
+                    console.error("Decryption Error:", error);
+                    document.getElementById("result").innerText = "Decryption Error: " + error;
+                });
             }
         }
 
@@ -130,12 +136,40 @@
 
 
 
+        function decrypt(encryptedData, encryption_key) {
+       
+            if (encryption_key.length !== 16 && encryption_key.length !== 32) {
+                throw new Error("AES key data must be 128 or 256 bits");
+            }
 
-        function decrypt(key, message) {
-            // Implement your decryption logic here
-            // Use 'key' and 'message' parameters
-            return "Decrypted Text";
+            var ciphering = "AES-CTR";
+            var options = { name: ciphering, counter: new Uint8Array(16), length: 128 };
+
+            var keyBuffer = new TextEncoder().encode(encryption_key);
+
+            // Convert the base64-encoded encrypted data to a Uint8Array
+            var encryptedBytes = new Uint8Array(atob(encryptedData).split('').map(function (c) { return c.charCodeAt(0); }));
+
+            var importedKey = window.crypto.subtle.importKey(
+                "raw",
+                keyBuffer,
+                ciphering,
+                false,
+                ["decrypt"]
+            );
+
+            return importedKey.then(function (key) {
+                return window.crypto.subtle.decrypt(
+                    options,
+                    key,
+                    encryptedBytes
+                );
+            }).then(function (decryptedData) {
+                var decryptedString = new TextDecoder().decode(decryptedData);
+                return decryptedString;
+            });
         }
+
     </script>
 
     <!-- Include Bootstrap JS -->

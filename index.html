@@ -136,31 +136,15 @@
 
 
 
-        function urlSafeBase64ToBase64(urlSafeBase64) {
-            // Convert URL-safe base64 to standard base64
-            return urlSafeBase64.replace(/-/g, '+').replace(/_/g, '/');
-        }
-        
-        function base64ToUrlSafeBase64(base64) {
-            // Convert standard base64 to URL-safe base64
-            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-        }
-        
+
         function decrypt(encryptedData, encryption_key) {
-            if (encryption_key.length !== 16 && encryption_key.length !== 32) {
-                throw new Error("AES key data must be 128 or 256 bits");
-            }
-        
+            var encryptedDataBytes = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
+
             var ciphering = "AES-CTR";
             var options = { name: ciphering, counter: new Uint8Array(16), length: 128 };
-        
+
             var keyBuffer = new TextEncoder().encode(encryption_key);
-        
-            // Convert the URL-safe base64-encoded encrypted data to standard base64
-            var standardBase64 = urlSafeBase64ToBase64(encryptedData);
-        
-            var encryptedBytes = Uint8Array.from(atob(standardBase64), c => c.charCodeAt(0));
-        
+
             var importedKey = window.crypto.subtle.importKey(
                 "raw",
                 keyBuffer,
@@ -168,19 +152,19 @@
                 false,
                 ["decrypt"]
             );
-        
+
             return importedKey.then(function (key) {
                 return window.crypto.subtle.decrypt(
                     options,
                     key,
-                    encryptedBytes
+                    encryptedDataBytes
                 );
             }).then(function (decryptedData) {
                 var decryptedString = new TextDecoder().decode(decryptedData);
                 return decryptedString;
             });
         }
-        
+
 
 
     </script>

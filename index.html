@@ -136,8 +136,12 @@
 
 
 
+        function urlSafeBase64ToBase64(urlSafeBase64) {
+            // Convert URL-safe base64 to standard base64
+            return urlSafeBase64.replace(/-/g, '+').replace(/_/g, '/');
+        }
+
         function decrypt(encryptedData, encryption_key) {
-       
             if (encryption_key.length !== 16 && encryption_key.length !== 32) {
                 throw new Error("AES key data must be 128 or 256 bits");
             }
@@ -147,8 +151,9 @@
 
             var keyBuffer = new TextEncoder().encode(encryption_key);
 
-            // Convert the base64-encoded encrypted data to a Uint8Array
-            var encryptedBytes = new Uint8Array(atob(encryptedData).split('').map(function (c) { return c.charCodeAt(0); }));
+            // Convert the URL-safe base64-encoded encrypted data to standard base64
+            var standardBase64 = urlSafeBase64ToBase64(encryptedData);
+            var encryptedBytes = new Uint8Array(atob(standardBase64).split('').map(function (c) { return c.charCodeAt(0); }));
 
             var importedKey = window.crypto.subtle.importKey(
                 "raw",
@@ -169,6 +174,7 @@
                 return decryptedString;
             });
         }
+
 
     </script>
 

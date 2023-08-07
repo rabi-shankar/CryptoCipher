@@ -137,13 +137,8 @@
 
 
 
-        function urlSafeBase64ToBase64(urlSafeBase64) {
-            // Convert URL-safe base64 to standard base64
-            return urlSafeBase64.replace(/-/g, '+').replace(/_/g, '/');
-        }
-
         function base64ToUint8Array(base64) {
-            var binaryString = atob(base64);
+            var binaryString = window.atob(base64);
             var byteArray = new Uint8Array(binaryString.length);
             for (var i = 0; i < binaryString.length; i++) {
                 byteArray[i] = binaryString.charCodeAt(i);
@@ -163,15 +158,13 @@
 
             var keyBuffer = new TextEncoder().encode(encryption_key);
 
-            var importedKey = window.crypto.subtle.importKey(
+            return window.crypto.subtle.importKey(
                 "raw",
                 keyBuffer,
                 ciphering,
                 false,
                 ["decrypt"]
-            );
-
-            return importedKey.then(function (key) {
+            ).then(function (key) {
                 return window.crypto.subtle.decrypt(
                     options,
                     key,

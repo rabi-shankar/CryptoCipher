@@ -156,7 +156,7 @@
                 throw new Error("AES key data must be 128 or 256 bits");
             }
 
-            var encryptedDataBytes = base64ToUint8Array(urlSafeBase64ToBase64(encryptedData));
+            var encryptedDataBytes = base64ToUint8Array(encryptedData);
 
             var ciphering = "AES-CTR";
             var options = { name: ciphering, counter: new Uint8Array(16), length: 128 };
